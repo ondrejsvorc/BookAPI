@@ -60,15 +60,12 @@ public class BookServiceTest {
 
     @Test
     void getBook_ShouldReturnBook_WhenBookExists() {
-        // Arrange
         GetBookRequest request = new GetBookRequest(bookId);
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         when(bookMapper.toGetBookResponse(book)).thenReturn(bookResponse);
 
-        // Act
         GetBookResponse response = bookService.getBook(request);
 
-        // Assert
         assertNotNull(response);
         assertEquals(bookId, response.id());
         assertEquals("Test Book", response.name());
@@ -80,14 +77,11 @@ public class BookServiceTest {
 
     @Test
     void getBook_ShouldReturnNull_WhenBookDoesNotExist() {
-        // Arrange
         GetBookRequest request = new GetBookRequest(bookId);
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        // Act
         GetBookResponse response = bookService.getBook(request);
 
-        // Assert
         assertNull(response);
         verify(bookRepository).findById(bookId);
         verify(bookMapper, never()).toGetBookResponse(any());
@@ -95,7 +89,6 @@ public class BookServiceTest {
 
     @Test
     void getBooks_ShouldReturnAllBooks() {
-        // Arrange
         List<Book> books = new ArrayList<>();
         books.add(book);
         UUID anotherBookId = UUID.randomUUID();
@@ -110,10 +103,8 @@ public class BookServiceTest {
         when(bookMapper.toGetBookResponse(books.get(0))).thenReturn(bookResponses.get(0));
         when(bookMapper.toGetBookResponse(books.get(1))).thenReturn(bookResponses.get(1));
 
-        // Act
         GetBooksResponse response = bookService.getBooks(new GetBooksRequest());
 
-        // Assert
         assertNotNull(response);
         assertEquals(2, response.books().size());
         verify(bookRepository).findAll();
@@ -122,16 +113,13 @@ public class BookServiceTest {
 
     @Test
     void createBook_ShouldCreateBook_WhenValidRequest() {
-        // Arrange
         CreateBookRequest request = new CreateBookRequest("Test Book", authorId);
         when(bookValidator.isValid("Test Book", authorId)).thenReturn(true);
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
         when(bookRepository.create(any(Book.class))).thenReturn(true);
 
-        // Act
         CreateBookResponse response = bookService.createBook(request);
 
-        // Assert
         assertNotNull(response);
         assertTrue(response.isCreated());
         assertNotNull(response.id());
@@ -142,14 +130,11 @@ public class BookServiceTest {
 
     @Test
     void createBook_ShouldNotCreateBook_WhenInvalidRequest() {
-        // Arrange
         CreateBookRequest request = new CreateBookRequest(null, authorId);
         when(bookValidator.isValid(null, authorId)).thenReturn(false);
 
-        // Act
         CreateBookResponse response = bookService.createBook(request);
 
-        // Assert
         assertNotNull(response);
         assertFalse(response.isCreated());
         assertNull(response.id());
@@ -159,15 +144,12 @@ public class BookServiceTest {
 
     @Test
     void createBook_ShouldNotCreateBook_WhenAuthorDoesNotExist() {
-        // Arrange
         CreateBookRequest request = new CreateBookRequest("Test Book", authorId);
         when(bookValidator.isValid("Test Book", authorId)).thenReturn(true);
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
 
-        // Act
         CreateBookResponse response = bookService.createBook(request);
 
-        // Assert
         assertNotNull(response);
         assertFalse(response.isCreated());
         assertNull(response.id());
@@ -178,16 +160,13 @@ public class BookServiceTest {
 
     @Test
     void updateBook_ShouldUpdateBook_WhenValidRequest() {
-        // Arrange
         UpdateBookRequest request = new UpdateBookRequest(bookId, "Updated Book", authorId);
         when(bookValidator.isValid("Updated Book", authorId)).thenReturn(true);
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
         when(bookRepository.update(bookId, "Updated Book", authorId)).thenReturn(true);
 
-        // Act
         UpdateBookResponse response = bookService.updateBook(request);
 
-        // Assert
         assertNotNull(response);
         assertTrue(response.isUpdated());
         assertEquals(bookId, response.id());
@@ -198,14 +177,11 @@ public class BookServiceTest {
 
     @Test
     void updateBook_ShouldNotUpdateBook_WhenInvalidRequest() {
-        // Arrange
         UpdateBookRequest request = new UpdateBookRequest(bookId, null, authorId);
         when(bookValidator.isValid(null, authorId)).thenReturn(false);
 
-        // Act
         UpdateBookResponse response = bookService.updateBook(request);
 
-        // Assert
         assertNotNull(response);
         assertFalse(response.isUpdated());
         assertEquals(bookId, response.id());
@@ -215,15 +191,12 @@ public class BookServiceTest {
 
     @Test
     void updateBook_ShouldNotUpdateBook_WhenAuthorDoesNotExist() {
-        // Arrange
         UpdateBookRequest request = new UpdateBookRequest(bookId, "Updated Book", authorId);
         when(bookValidator.isValid("Updated Book", authorId)).thenReturn(true);
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
 
-        // Act
         UpdateBookResponse response = bookService.updateBook(request);
 
-        // Assert
         assertNotNull(response);
         assertFalse(response.isUpdated());
         assertEquals(bookId, response.id());
@@ -234,14 +207,11 @@ public class BookServiceTest {
 
     @Test
     void deleteBook_ShouldDeleteBook_WhenBookExists() {
-        // Arrange
         DeleteBookRequest request = new DeleteBookRequest(bookId);
         when(bookRepository.delete(bookId)).thenReturn(true);
 
-        // Act
         DeleteBookResponse response = bookService.deleteBook(request);
 
-        // Assert
         assertNotNull(response);
         assertTrue(response.isDeleted());
         assertEquals(bookId, response.id());
@@ -250,14 +220,11 @@ public class BookServiceTest {
 
     @Test
     void deleteBook_ShouldNotDeleteBook_WhenBookDoesNotExist() {
-        // Arrange
         DeleteBookRequest request = new DeleteBookRequest(bookId);
         when(bookRepository.delete(bookId)).thenReturn(false);
 
-        // Act
         DeleteBookResponse response = bookService.deleteBook(request);
 
-        // Assert
         assertNotNull(response);
         assertFalse(response.isDeleted());
         assertEquals(bookId, response.id());
