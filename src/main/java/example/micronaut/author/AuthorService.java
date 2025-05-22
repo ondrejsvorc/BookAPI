@@ -29,8 +29,8 @@ public class AuthorService implements IAuthorService {
 
     @Override
     public GetAuthorResponse getAuthor(GetAuthorRequest request) {
-        Optional<Author> authorOptional = repository.findById(request.id());
-        return authorOptional.map(mapper::toGetAuthorResponse).orElse(null);
+        Optional<Author> author = repository.findById(request.id());
+        return author.map(mapper::toGetAuthorResponse).orElse(null);
     }
 
     @Override
