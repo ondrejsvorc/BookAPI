@@ -42,7 +42,7 @@ public class AuthorRepository implements IAuthorRepository {
         }
 
         authors.remove(author.get());
-        authors.add(new Author(newName));
+        authors.add(new Author(id, newName));
         return true;
     }
 
