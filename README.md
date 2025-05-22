@@ -44,4 +44,13 @@ Run tests.
 | PUT    | /authors        | Update author   |
 | DELETE | /authors/{id}   | Delete author   |
 
-
+### Possible improvements
+- Connect to relational DB instead of in-memory one
+- Add RepositoryFactory and inject only its interface instead of injecting repositories one by one
+- Utilize Optional<T> more to avoid null
+- Utilize .map and .flatMap as it works well with Optional<T>
+- Add M:N relation between books and authors
+- Add logging
+- Add custom exceptions (and global exception handler) or introduce Result pattern
+- Standardize error messages
+- Increase code coverage of core parts by adding more unit tests and by introducing integration tests
