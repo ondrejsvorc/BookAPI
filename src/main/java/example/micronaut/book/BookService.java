@@ -1,7 +1,7 @@
 package example.micronaut.book;
 
 import example.micronaut.author.Author;
-import example.micronaut.author.AuthorRepository;
+import example.micronaut.author.IAuthorRepository;
 import example.micronaut.book.create.CreateBookRequest;
 import example.micronaut.book.create.CreateBookResponse;
 import example.micronaut.book.delete.DeleteBookRequest;
@@ -13,18 +13,19 @@ import example.micronaut.book.get.GetBooksResponse;
 import example.micronaut.book.update.UpdateBookRequest;
 import example.micronaut.book.update.UpdateBookResponse;
 import jakarta.inject.Singleton;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
 public class BookService implements IBookService {
-    private final BookRepository repository;
+    private final IBookRepository repository;
     private final BookValidator validator;
     private final BookMapper mapper;
-    private final AuthorRepository authorRepository;
+    private final IAuthorRepository authorRepository;
 
-    public BookService(BookRepository repository, BookValidator validator, BookMapper mapper, AuthorRepository authorRepository) {
+    public BookService(IBookRepository repository, BookValidator validator, BookMapper mapper, IAuthorRepository authorRepository) {
         this.repository = repository;
         this.validator = validator;
         this.mapper = mapper;
@@ -68,18 +69,18 @@ public class BookService implements IBookService {
             return new UpdateBookResponse(request.id(), false);
         }
 
-        var authorOptional = authorRepository.findById(request.authorId());
-        if (authorOptional.isEmpty()) {
+        Optional<Author> author = authorRepository.findById(request.authorId());
+        if (author.isEmpty()) {
             return new UpdateBookResponse(request.id(), false);
         }
 
-        boolean updated = repository.update(request.id(), request.name(), request.authorId());
-        return new UpdateBookResponse(request.id(), updated);
+        boolean isUpdated = repository.update(request.id(), request.name(), request.authorId());
+        return new UpdateBookResponse(request.id(), isUpdated);
     }
 
     @Override
     public DeleteBookResponse deleteBook(DeleteBookRequest request) {
-        boolean deleted = repository.delete(request.id());
-        return new DeleteBookResponse(request.id(), deleted);
+        boolean isDeleted = repository.delete(request.id());
+        return new DeleteBookResponse(request.id(), isDeleted);
     }
 }

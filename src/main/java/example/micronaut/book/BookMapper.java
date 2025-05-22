@@ -17,9 +17,11 @@ public class BookMapper {
 
     public GetBookResponse toGetBookResponse(Book book) {
         Optional<Author> author = authorRepository.findById(book.getAuthorId());
+
         if (author.isEmpty()) {
             throw new IllegalStateException("Author not found for book: " + book.getId());
         }
+
         return toGetBookResponse(book, author.get());
     }
 

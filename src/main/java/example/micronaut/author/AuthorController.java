@@ -24,46 +24,40 @@ import java.util.UUID;
 
 @Controller("/authors")
 public class AuthorController {
-    private final IAuthorService authorService;
+    private final IAuthorService service;
 
     @Inject
-    public AuthorController(IAuthorService authorService) {
-        this.authorService = authorService;
+    public AuthorController(IAuthorService service) {
+        this.service = service;
     }
 
     @Post
     public HttpResponse<CreateAuthorResponse> create(@Body CreateAuthorRequest request) {
-        CreateAuthorResponse response = authorService.createAuthor(request);
-        return response.isCreated()
-                ? HttpResponse.created(response)
-                : HttpResponse.status(HttpStatus.BAD_REQUEST).body(response);
-    }    @Get("/{id}")
+        CreateAuthorResponse response = service.createAuthor(request);
+        return response.isCreated() ? HttpResponse.created(response) : HttpResponse.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @Get("/{id}")
     public HttpResponse<GetAuthorResponse> getById(@PathVariable UUID id) {
-        GetAuthorResponse response = authorService.getAuthor(new GetAuthorRequest(id));
-        return response != null
-                ? HttpResponse.ok(response)
-                : HttpResponse.notFound();
+        GetAuthorResponse response = service.getAuthor(new GetAuthorRequest(id));
+        return response != null ? HttpResponse.ok(response) : HttpResponse.notFound();
     }
 
     @Get
     public HttpResponse<GetAuthorsResponse> getAll() {
-        GetAuthorsResponse response = authorService.getAuthors(new GetAuthorsRequest());
+        GetAuthorsResponse response = service.getAuthors(new GetAuthorsRequest());
         return HttpResponse.ok(response);
     }
 
     @Put
     public HttpResponse<UpdateAuthorResponse> update(@Body UpdateAuthorRequest request) {
-        UpdateAuthorResponse response = authorService.updateAuthor(request);
-        return response.isUpdated()
-                ? HttpResponse.ok(response)
-                : HttpResponse.notFound();
+        UpdateAuthorResponse response = service.updateAuthor(request);
+        return response.isUpdated() ? HttpResponse.ok(response) : HttpResponse.notFound();
     }
 
     @Delete("/{id}")
     public HttpResponse<DeleteAuthorResponse> delete(@PathVariable UUID id) {
-        DeleteAuthorResponse response = authorService.deleteAuthor(new DeleteAuthorRequest(id));
-        return response.isDeleted()
-                ? HttpResponse.ok(response)
-                : HttpResponse.notFound();
+        DeleteAuthorResponse response = service.deleteAuthor(new DeleteAuthorRequest(id));
+        return response.isDeleted() ? HttpResponse.ok(response) : HttpResponse.notFound();
     }
 }
