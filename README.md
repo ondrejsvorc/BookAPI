@@ -46,6 +46,7 @@ Run tests.
 
 ### Possible improvements
 - Connect to relational DB instead of in-memory one
+- Improve update method by updating the existing record
 - Add RepositoryFactory and inject only its interface instead of injecting repositories one by one
 - Utilize Optional<T> more to avoid null
 - Utilize .map and .flatMap as it works well with Optional<T>
